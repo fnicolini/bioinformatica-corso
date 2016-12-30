@@ -14,7 +14,7 @@ char* unique_chars(const char* pattern, char* text) {
 			counter++;
 		}
 	}
-
+	free(merged_array);
 	return res;
 
 }
@@ -31,19 +31,21 @@ int contains_char(char* a, char c) {
 }
 
 
-void fill_mask(unsigned int *mask, char *unique_chars, const char *pattern) {
-
+unsigned int* create_masks(char *unique_chars, const char *pattern, int totsymbols) {
+	unsigned int *masks = (unsigned int*)calloc(totsymbols, sizeof(unsigned int));
 	for (int i = 0; i < strlen(unique_chars); ++i) {
 		for (int j = 0; j < strlen(pattern); ++j) {
 
 			if(pattern[j] == unique_chars[i])
-				mask[i] = mask[i] + pow(2, strlen(pattern) - j - 1);
+				masks[i] = masks[i] + pow(2, strlen(pattern) - j - 1);
 		}
 	}
-
+	return masks;
 }
 
-void calculate_array(unsigned int *array, char *text, unsigned int *mask, char *unique_chars, const char *pattern) {
+unsigned int* calculate_array(char *text, unsigned int *mask, char *unique_chars, const char *pattern) {
+	int matches = 0;
+	unsigned int *array = (unsigned int*)calloc(strlen(text), sizeof(unsigned int));
 	unsigned int tmp = 0;
 	char current_char;
     int current_symbol_index;
@@ -58,10 +60,16 @@ void calculate_array(unsigned int *array, char *text, unsigned int *mask, char *
 		current_char = text[i];
 		current_symbol_index = indexof(unique_chars, current_char);
 		array[i] = tmp & mask[current_symbol_index];
+		if(array[i] == 1){
+			printf("Match found, starting at character %d\n", i - strlen(pattern) + 2);
+			matches++;
+		}
 
 	}
 
+	printf("Total matches: %d\n", matches);
 
+	return array;
 }
 
 unsigned int bit_shift(unsigned int n, int pattern_length) {
@@ -85,23 +93,10 @@ int indexof(char *unique_chars, char c) {
 }
 
 char* merge_arrays(const char* a, const char* b) {
-
 	char *res = (char*)calloc(strlen(a) + strlen(b), sizeof(char));
 
 	memcpy(res, a, strlen(a));
 	memcpy(&res[strlen(a)], b, strlen(b));
-
-}
-
-void print_result(unsigned int *array_risolvente, int textlen, int patlen) {
-
-
-	for (int i = 0; i < textlen; ++i) {
-		
-		if(array_risolvente[i] == 1)
-			printf("Ho trovato un'occorrenza del pattern, inizia alla posizione %d\n", i - patlen + 2);
-
-	}
-
+	return res;
 
 }

@@ -1,26 +1,53 @@
 // C implementation of shift-and algorithm for exact matching
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "shiftand.h"
 
+/* 
+	To run the program 2 command line arguments are needed: 
+	1. The string you want to search for in a text
+	2. The text file in which to look for the string 
 
-// argv[1] is the pattern
-// argv[2] is the file that contains the text in which to look for the pattern
+*/
+
+char* process_file(const char *filename);	
+
+
 int main(int argc, char const *argv[])
 {
+	//Load into memory the whole text
+	char *text = process_file(argv[2]);
+	//Return an array of all the symbols used in this context(i.e pattern and text)
+	char *symbols = unique_chars(argv[1], text);
+	int totsymbols = strlen(symbols);
+
+	unsigned int *pattern_masks = create_masks(symbols, argv[1], totsymbols);
+
+	//Create and calculate the array containing the values used for the exact matching
+	//at the same time, when a match is found print it to the console
+
+	unsigned int *final_array = calculate_array(text, pattern_masks, symbols, argv[1]);
+
+	// free the memory
+	free(text);
+	free(final_array);
+	free(pattern_masks);
+	free(symbols);
+
+	return 0;
+}
+
+
+char* process_file(const char *filename) {
 	FILE *textfile;
-	char *text;
 	long numbytes;
 
-	printf("%s\n", argv[2]);
-
 	//open the file
-	textfile = fopen(argv[2], "r");
+	textfile = fopen(filename, "r");
 
 	//if there is an error, exit the program
-	if(textfile == NULL)
-		return 1;
+	if(textfile == NULL){
+		puts("file open error");
+		exit(1);
+	}
 
 	//get the number of bytes
 	fseek(textfile, 0L, SEEK_END);
@@ -30,64 +57,17 @@ int main(int argc, char const *argv[])
 	fseek(textfile, 0L, SEEK_SET);
 
 	//allocate memory for the text
-	text = (char*)calloc(numbytes, sizeof(char));
+	char *text = (char*)calloc(numbytes, sizeof(char));
 
 	//if allocation went wrong, exit the program
-	if(text == NULL)
-		return 1;
+	if(text == NULL){
+		puts("file variable allocation error");
+		exit(1);
+	}
 
 	//Copy the whole file into the array
 	fread(text, sizeof(char), numbytes, textfile);
 	fclose(textfile);
 
-	char *unique_pchars = unique_chars(argv[1], text);
-	int totunique_pchars = strlen(unique_pchars);
-
-	unsigned int *pattern_masks = (unsigned int*)calloc(totunique_pchars, sizeof(unsigned int));
-
-	fill_mask(pattern_masks, unique_pchars, argv[1]);
-
-	//create array
-
-	unsigned int *array_risolvente = (unsigned int*)calloc(strlen(text), sizeof(unsigned int));
-
-	calculate_array(array_risolvente, text, pattern_masks, unique_pchars, argv[1]); 
-
-	print_result(array_risolvente, strlen(text), strlen(argv[1]));
-
-
-	/*
-	printf("\nnumero di elementi: %d\n", argc);
-	printf("pattern length: %d\n", strlen(argv[1]));
-	printf("text length: %d\n", numbytes);
-	printf("number of unique_pchars: %d\n", totunique_pchars);
-	printf("unique pchars: %s\n", unique_pchars);
-	printf("pattern: %s\n", argv[1]);
-
-	for (int i = 0; i < totunique_pchars; ++i) {
-
-		printf("%d ", pattern_masks[i]);
-
-	}
-
-	puts("\n");
-
-
-
-
-	for (int i = 0; i < strlen(text); ++i) {
-
-		printf("%d ", array_risolvente[i]);
-
-	}
-
-	puts("\n");
-	*/
-
-	// free the memory we used for the buffer
-	free(text);
-
-	return 0;
+	return text;	
 }
-
-
