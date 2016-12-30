@@ -7,3 +7,4 @@ The algorithm consists of 2 phases: preprocessing and searching.
 
 Although the Shift-And method is very simple, and in worst case the number of bit operation is ![](Shift-And complexity.jpg) (where n is the pattern size and m the text size), the method is very efficient if n is less than the size of a single computer word (because in this case bitwise operation have a one-to-one correspondence with machine operation)
 
+References: [Wikipedia](https://en.wikipedia.org/wiki/Bitap_algorithm), D.Gusfield *ALgorithm on Strings, Trees and Sequences* 
