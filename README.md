@@ -1,2 +1,2 @@
 # bioinformatica-corso
-Implementazione degli Algoritmi visti al corso di Bioinformatica (2016-17) Bicocca (Informatica)
+Implementation of some algorithms encountered in the degree course "Bioinformatica" (2016-17)at Università di Milano Bicocca (Computer Science)
