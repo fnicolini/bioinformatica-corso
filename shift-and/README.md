@@ -18,6 +18,11 @@ The algorithm consists of these two phases:
 
 Although this method is very simple, and in worst case scenario the number of bit operations is `Θ(n * m)`, with `n` as the pattern size and `m` as the text size, the method is very efficient if `n` is less than the size of a single computer word, since in this case bitwise operation have a one-to-one correspondence with machine operation.
 
+
+- **Using**
+
+Compile with *make* and run with `shiftand pattern file`
+
 ##### References
 - [*Bitap Algorithm* - Wikipedia](https://en.wikipedia.org/wiki/Bitap_algorithm) 
 - *Algorithm on Strings, Trees and Sequences* - D.Gusfield
