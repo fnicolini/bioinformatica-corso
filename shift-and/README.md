@@ -21,7 +21,7 @@ Although this method is very simple, and in worst case scenario the number of bi
 
 #### Using
 
-Compile with *make* and run with the command `shiftand` with 2 arguments: first the string you want to search, then the relative path to te file in which to search the string.  
+Compile with `make` and run with the command `shiftand` with 2 arguments: first the string you want to search, then the relative path to te file in which to search the string.  
 Example: `shiftand foo42 /bar/foo.txt`
 
 ##### References
