@@ -21,7 +21,7 @@ char* unique_chars(const char* pattern, char* text) {
 
 int contains_char(char* a, char c) {
 
-	for (int i = 0; i < strlen(a); ++i) {
+	for (size_t i = 0; i < strlen(a); ++i) {
 		if(a[i] == c)
 			return 1;
 	}
@@ -33,8 +33,8 @@ int contains_char(char* a, char c) {
 
 unsigned int* create_masks(char *unique_chars, const char *pattern, int totsymbols) {
 	unsigned int *masks = (unsigned int*)calloc(totsymbols, sizeof(unsigned int));
-	for (int i = 0; i < strlen(unique_chars); ++i) {
-		for (int j = 0; j < strlen(pattern); ++j) {
+	for (size_t i = 0; i < strlen(unique_chars); ++i) {
+		for (size_t j = 0; j < strlen(pattern); ++j) {
 
 			if(pattern[j] == unique_chars[i])
 				masks[i] = masks[i] + pow(2, strlen(pattern) - j - 1);
@@ -55,13 +55,13 @@ unsigned int* calculate_array(char *text, unsigned int *mask, char *unique_chars
 	else
 		array[0] = 0;
 
-	for (int i = 1; i < strlen(text); ++i) {
+	for (size_t i = 1; i < strlen(text); ++i) {
 		tmp = bit_shift(array[i-1], strlen(pattern));
 		current_char = text[i];
 		current_symbol_index = indexof(unique_chars, current_char);
 		array[i] = tmp & mask[current_symbol_index];
 		if(array[i] == 1){
-			printf("Match found, starting at character %d\n", i - strlen(pattern) + 2);
+			printf("Match found, starting at character %zu\n", i - strlen(pattern) + 2);
 			matches++;
 		}
 
@@ -83,12 +83,14 @@ unsigned int bit_shift(unsigned int n, int pattern_length) {
 int indexof(char *unique_chars, char c) {
 
 
-	for (int i = 0; i < strlen(unique_chars); ++i) {
+	for (size_t i = 0; i < strlen(unique_chars); ++i) {
 	
 		if(unique_chars[i] == c)
 			return i;
 
 	}
+
+	return -1;
 
 }
 
